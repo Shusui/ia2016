@@ -1,0 +1,6 @@
+# Python
+*.pyc
+
+# Garbage
+*~
+.DS_Store
