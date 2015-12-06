@@ -116,12 +116,15 @@ class DBN(object):
 def test_dbn(pretrain_lr=0.1, pretraining_epochs=1000, k=1, \
              finetune_lr=0.1, finetune_epochs=200):
 
+	# train - pixels (sparse coding)
     x = numpy.array([[1,1,1,0,0,0],
                      [1,0,1,0,0,0],
                      [1,1,1,0,0,0],
                      [0,0,1,1,1,0],
                      [0,0,1,1,0,0],
                      [0,0,1,1,1,0]])
+
+    # target - memorability
     y = numpy.array([[1, 0],
                      [1, 0],
                      [1, 0],
@@ -131,8 +134,11 @@ def test_dbn(pretrain_lr=0.1, pretraining_epochs=1000, k=1, \
     
     rng = numpy.random.RandomState(123)
 
+    nins  = len(x[0])
+    nouts = len(y[0])
+
     # construct DBN
-    dbn = DBN(input=x, label=y, n_ins=6, hidden_layer_sizes=[3, 3], n_outs=2, rng=rng)
+    dbn = DBN(input=x, label=y, n_ins=nins, hidden_layer_sizes=[3, 3], n_outs=nouts, rng=rng)
 
     # pre-training (TrainUnsupervisedDBN)
     dbn.pretrain(lr=pretrain_lr, k=1, epochs=pretraining_epochs)
