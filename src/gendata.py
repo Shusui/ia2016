@@ -1,30 +1,37 @@
 import numpy, os
 from skimage import io
-from sklearn.decomposition import sparse_encode, MiniBatchDictionaryLearning
+from skimage.transform import resize
 
-def gen(batch_iter=100):
+#shape retorna height, width
 
-	feats = []
-	max_components = 0
-	
-	imagesfolder = os.getcwd() + "/Data/"
-	imagespaths = os.listdir(imagesfolder)
+def gen(perc):
 
-	for path in imagespaths:
-		img = io.imread(imagesfolder + path, True)
-		feats.append(img)
+	data = []
+	scores = []
+	max_w = 0
+	max_h = 0
+	train_data = []
+	train_target = []
+	test_data = []
+	test_target = []
 
-	mbdl = MiniBatchDictionaryLearning(n_components=len(imagespaths), n_iter=batch_iter)
-	
-	for feat in feats:
-		mbdl.fit(feat)
+	with open('scores.txt') as f:
+		content = f.readlines()
 
-	"""
-	for feat in feats:
-		code = sparse_encode(feat, mbdl.components_, alpha=0.1)
-		print code, "\n", len(code), len(code[0])
-	"""
+	for info in content:
+		aux = info[0:len(info)-1].split(',')
+		scores.append(float(aux[1]))
+		img = io.imread(os.getcwd() + '/Data/' + aux[0], True)
+		data.append(img)
+		max_h = max(max_h, img.shape[0])
+		max_w = max(max_w, img.shape[1])
+
+	ind = 0
+	for img in data:
+		print("Processing ...")
+		test_data.append(resize(img, (max_h, max_w)))
+		#test_data[ind].append(scores[ind])
+		ind += 1
 
 if __name__ == "__main__":
-	numpy.set_printoptions(precision=3, suppress=True)
-	gen(10)
+	gen(0.7)
