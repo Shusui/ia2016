@@ -7,19 +7,19 @@ from skimage.transform import resize
 def gen(perc):
 
 	data = []
-	scores = []
+	to_shuffle = []
 	max_w = 0
 	max_h = 0
 	train_data = []
 	train_target = []
 	test_data = []
-	test_target = []
 
 	with open('scores.txt') as f:
 		content = f.readlines()
 
 	for info in content:
 		aux = info[0:len(info)-1].split(',')
+		to_shuffle.append([aux[0].split('.')[0], aux[1]])
 		scores.append(float(aux[1]))
 		img = io.imread(os.getcwd() + '/Data/' + aux[0], True)
 		data.append(img)
