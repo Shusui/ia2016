@@ -33,7 +33,9 @@ def gen(perc):
 	print "Finished loading images..."
 
 	for img in data:
-		new_data.append(resize(img, (max_h, max_w)))
+		img = resize(img, (max_h, max_w)))
+		img = img.ravel()
+		new_data.append(img)
 	print "All images normalized..."
 
 	data = new_data
