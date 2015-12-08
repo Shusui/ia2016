@@ -26,13 +26,13 @@ def gen(perc):
 	for info in content:
 		aux = info[0:len(info)-1].split(',')
 		to_shuffle.append([int(aux[0].split('.')[0]) - 1, float(aux[1])])
-		img = io.imread(os.getcwd() + '/Data/' + aux[0], True)
+		img = io.imread('Data/' + aux[0], True)
 		max_h = max(max_h, img.shape[0])
 		max_w = max(max_w, img.shape[1])
 	print "Finished loading images..."
 
 	for i in to_shuffle:
-		img = io.imread(os.getcwd() + '/Data/' + str(i[0] + 1) + '.jpg', True)
+		img = io.imread('Data/' + str(i[0] + 1) + '.jpg', True)
 		img = resize(img, (max_h, max_w))
 		img = img.ravel()
 		new_data.append(img)
@@ -51,8 +51,5 @@ def gen(perc):
 		test_target.append(create_target(to_shuffle[i][1]))
 	print "Ready for classification..."
 
-	output = [train_data, train_target, test_data, test_target]
-	return output
+	return [train_data, train_target, test_data, test_target, to_shuffle]
 
-if __name__ == "__main__":
-	gen(0.7)

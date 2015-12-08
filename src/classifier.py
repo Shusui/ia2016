@@ -12,15 +12,22 @@ def fit(train_data, train_target, pretrain_epochs=100, pretrain_lr=0.1, finetune
 
 	return dbn
 
-def perft(dbn, test_data, test_target):
+def perft(dbn, test_data, test_target, to_shuffle, verbose=False):
 	out = dbn.predict(test_data)
+	if verbose:
+		print 'Deep belief net output:\n', out
 
+	size = len(out)
 	perf = 0.0
-	for i in range(len(out)):
+	for i in range(size):
 		if numpy.argmax(out[i]) == numpy.argmax(test_target[i]):
 			perf += 1
 
-	print 'Performance rate: ', perf / len(out)
+		if verbose:
+			img_name = str(int(to_shuffle[len(to_shuffle)-size+i][0])) + '.jpg'
+			print 'Image:', img_name, '\t','Expected:', numpy.argmax(test_target[i]), '- Predicted:', numpy.argmax(out[i])
+
+	print 'Performance rate: ', perf / len(out) * 100
 
 def classify(perc):
 	inp = gen(perc)
@@ -29,9 +36,10 @@ def classify(perc):
 	train_target = numpy.array(inp[1])
 	test_data    = numpy.array(inp[2])
 	test_target  = numpy.array(inp[3])
+	to_shuffle	 = numpy.array(inp[4])
 
-	dbn = fit(train_data, train_target)
-	perft(dbn, test_data, test_target)
+	dbn = fit(train_data, train_target, 1000, 0.1, 200)
+	perft(dbn, test_data, test_target, to_shuffle, True)
 
 if __name__ == "__main__":
 	if len(sys.argv) != 2:
