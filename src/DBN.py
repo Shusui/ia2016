@@ -70,7 +70,7 @@ class DBN(object):
 
 
 
-    def pretrain(self, lr=0.1, k=1, epochs=100):
+    def pretrain(self, lr=0.1, k=1, epochs=100, verbose=False):
         # pre-train layer-wise
         for i in xrange(self.n_layers):
             if i == 0:
@@ -81,12 +81,13 @@ class DBN(object):
             
             for epoch in xrange(epochs):
                 rbm.contrastive_divergence(lr=lr, k=k, input=layer_input)
-                # cost = rbm.get_reconstruction_cross_entropy()
-                # print >> sys.stderr, \
-                #        'Pre-training layer %d, epoch %d, cost ' %(i, epoch), cost
+
+                if verbose:
+                    cost = rbm.get_reconstruction_cross_entropy()
+                    print >> sys.stderr, 'Pre-training layer %d, epoch %d, cost ' %(i, epoch), cost
 
 
-    def finetune(self, lr=0.1, epochs=100):
+    def finetune(self, lr=0.1, epochs=100, verbose=False):
         layer_input = self.sigmoid_layers[-1].sample_h_given_v()
 
         # train log_layer
@@ -94,8 +95,10 @@ class DBN(object):
         done_looping = False
         while (epoch < epochs) and (not done_looping):
             self.log_layer.train(lr=lr, input=layer_input)
-            # self.finetune_cost = self.log_layer.negative_log_likelihood()
-            # print >> sys.stderr, 'Training epoch %d, cost is ' % epoch, self.finetune_cost
+
+            if verbose:
+                self.finetune_cost = self.log_layer.negative_log_likelihood()
+                print >> sys.stderr, 'Training epoch %d, cost is ' % epoch, self.finetune_cost
             
             lr *= 0.95
             epoch += 1
@@ -110,51 +113,3 @@ class DBN(object):
 
         out = self.log_layer.predict(layer_input)
         return out
-
-
-
-def test_dbn(pretrain_lr=0.1, pretraining_epochs=1000, k=1, \
-             finetune_lr=0.1, finetune_epochs=200):
-
-	# train - pixels (sparse coding)
-    x = numpy.array([[1,1,1,0,0,0],
-                     [1,0,1,0,0,0],
-                     [1,1,1,0,0,0],
-                     [0,0,1,1,1,0],
-                     [0,0,1,1,0,0],
-                     [0,0,1,1,1,0]])
-
-    # target - memorability
-    y = numpy.array([[1, 0],
-                     [1, 0],
-                     [1, 0],
-                     [0, 1],
-                     [0, 1],
-                     [0, 1]])
-    
-    rng = numpy.random.RandomState(123)
-
-    nins  = len(x[0])
-    nouts = len(y[0])
-
-    # construct DBN
-    dbn = DBN(input=x, label=y, n_ins=nins, hidden_layer_sizes=[3, 3], n_outs=nouts, rng=rng)
-
-    # pre-training (TrainUnsupervisedDBN)
-    dbn.pretrain(lr=pretrain_lr, k=1, epochs=pretraining_epochs)
-    
-    # fine-tuning (DBNSupervisedFineTuning)
-    dbn.finetune(lr=finetune_lr, epochs=finetune_epochs)
-
-
-    # test
-    x = numpy.array([[1, 1, 0, 0, 0, 0],
-                     [0, 0, 0, 1, 1, 0],
-                     [1, 1, 1, 1, 1, 0]])
-    
-    print dbn.predict(x)
-
-
-
-if __name__ == "__main__":
-    test_dbn()
