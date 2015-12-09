@@ -48,7 +48,7 @@ def gen(perc):
 		img = io.imread('Data/' + str(i[0] + 1) + '.jpg', as_grey=True)
 		img = resize(img, (max_h, max_w))
 		img = img.ravel()
-		img = compact_image(img, max_h*max_w)
+		#img = compact_image(img, max_h*max_w)
 		new_data.append(img)
 	print "All images normalized..."
 
