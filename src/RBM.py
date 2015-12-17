@@ -58,8 +58,7 @@ class RBM(object):
         # chain_end = nv_samples
 
 
-        self.W += lr * (numpy.dot(self.input.T, ph_mean)
-                        - numpy.dot(nv_samples.T, nh_means))
+        self.W += lr * (numpy.dot(self.input.T, ph_mean) - numpy.dot(nv_samples.T, nh_means))
         self.vbias += lr * numpy.mean(self.input - nv_samples, axis=0)
         self.hbias += lr * numpy.mean(ph_mean - nh_means, axis=0)
 
@@ -119,39 +118,3 @@ class RBM(object):
         h = sigmoid(numpy.dot(v, self.W) + self.hbias)
         reconstructed_v = sigmoid(numpy.dot(h, self.W.T) + self.vbias)
         return reconstructed_v
-
-
-
-
-
-def test_rbm(learning_rate=0.1, k=1, training_epochs=1000):
-    data = numpy.array([[1,1,1,0,0,0],
-                        [1,0,1,0,0,0],
-                        [1,1,1,0,0,0],
-                        [0,0,1,1,1,0],
-                        [0,0,1,1,0,0],
-                        [0,0,1,1,1,0]])
-
-
-    rng = numpy.random.RandomState(123)
-
-    # construct RBM
-    rbm = RBM(input=data, n_visible=6, n_hidden=2, rng=rng)
-
-    # train
-    for epoch in xrange(training_epochs):
-        rbm.contrastive_divergence(lr=learning_rate, k=k)
-        # cost = rbm.get_reconstruction_cross_entropy()
-        # print >> sys.stderr, 'Training epoch %d, cost is ' % epoch, cost
-
-
-    # test
-    v = numpy.array([[1, 1, 0, 0, 0, 0],
-                     [0, 0, 0, 1, 1, 0]])
-
-    print rbm.reconstruct(v)
-
-
-
-if __name__ == "__main__":
-    test_rbm()

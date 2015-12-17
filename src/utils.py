@@ -1,11 +1,10 @@
 
 import numpy
-numpy.seterr(all='ignore')
+#numpy.seterr(all='ignore')
 
 
 def sigmoid(x):
     return 1. / (1 + numpy.exp(-x))
-
 
 def dsigmoid(x):
     return x * (1. - x)

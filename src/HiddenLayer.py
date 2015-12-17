@@ -91,5 +91,3 @@ class HiddenLayer(object):
                                            n=1,
                                            p=v_mean)
         return h_sample
-
-
