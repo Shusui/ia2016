@@ -5,7 +5,7 @@ from skimage import io
 from skimage.transform import resize
 
 def target(score):
-	scores = numpy.arange(0.3, 1.01, 0.1)
+	scores = numpy.arange(0.1, 1.01, 0.3)
 	t = numpy.zeros(len(scores))
 
 	for i in range(len(scores)):
@@ -15,16 +15,19 @@ def target(score):
 
 	return t
 
-def simplify(img):
+def simplify(img, pixel_density=255):
 	for i in range(len(img)):
-		img[i] = int(255 * img[i]) / 255.0
+		img[i] = int(pixel_density * img[i]) / (pixel_density * 1.0)
 
 	return img
 
 def get_path(img_line):
 	return 'BigData/' + img_line[1] + '/' + img_line[2]
 def get_memorability(img_line):
-	return float(img_line[3]) / (float(img_line[3]) + float(img_line[4]))
+	if(float(img_line[4]) == 0.0):
+		return float(img_line[4])
+	else:
+		return float(img_line[3]) / (float(img_line[3]) + float(img_line[4]))
 
 def gen(perc, max_images):
 
@@ -46,9 +49,9 @@ def gen(perc, max_images):
 		helper.append([int(aux[0])-1, get_memorability(aux), aux[1]+'/'+aux[2]])
 
 		img = io.imread(get_path(aux), as_grey=True)
-		img = resize(img, (128,128))
+		img = resize(img, (64,64))
 		img = img.ravel()
-		img = simplify(img)
+		img = simplify(img, pixel_density=8)
 
 		data.append(img)
 

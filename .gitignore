@@ -5,3 +5,28 @@
 # Garbage
 *~
 .DS_Store
+
+# Dataset
+/src/BigData/airport_terminal/
+/src/BigData/amusement_park/
+/src/BigData/badlands/
+/src/BigData/bathroom/
+/src/BigData/bedroom/
+/src/BigData/bridge/
+/src/BigData/castle/
+/src/BigData/cockpit/
+/src/BigData/conference_room/
+/src/BigData/dining_room/
+/src/BigData/filtered/
+/src/BigData/golf_course/
+/src/BigData/highway/
+/src/BigData/house/
+/src/BigData/kitchen/
+/src/BigData/lighthouse/
+/src/BigData/living_room/
+/src/BigData/mountain/
+/src/BigData/other/
+/src/BigData/pasture/
+/src/BigData/playground/
+/src/BigData/skyscraper/
+/src/BigData/tower/

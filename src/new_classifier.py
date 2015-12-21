@@ -46,14 +46,13 @@ def MultiLayerPerceptron(train_data, train_target, test_data, test_target):
 
 	return model.predict(test_data, verbose=0)
 
-def perft(out, target, helper, verbose=0):
+def perft(out, target, helper):
 	print(os.linesep + 'Detailed prediction:')
 
 	for i in range(len(out)):
-		if verbose:
-			print('Expected: ' + str(numpy.argmax(target[i])) + ' ' +
-				'- Predicted: '+ str(numpy.argmax(out[i])) + ' ' +
-				'- Image: '    + str(helper[i][2]))
+		print('Expected: ' + str(numpy.argmax(target[i])) + ' ' +
+			'- Predicted: '+ str(numpy.argmax(out[i])) + ' ' +
+			'- Image: '    + str(helper[i][2]))
 
 def classify(perc, max_images):
 	inp = gen(perc, max_images)
@@ -65,7 +64,7 @@ def classify(perc, max_images):
 	helper 		 = numpy.array(inp[4])
 
 	out = MultiLayerPerceptron(train_data, train_target, test_data, test_target)
-	perft(out, test_target, helper, verbose=1)
+	perft(out, test_target, helper)
 
 if __name__ == "__main__":
 	if len(sys.argv) != 3:
