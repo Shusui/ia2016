@@ -15,9 +15,9 @@ def ConvolutionalNeuralNetwork(train_data, train_target, test_data, test_target)
 def MultiLayerPerceptron(train_data, train_target, test_data, test_target):
 	numpy.random.seed(1337)
 
-	epoch  = 10
+	epoch  = 100
 	batch  = 128
-	layers = 512
+	layers = 256
 
 	n_ins  = len(train_data[0])
 	n_out  = len(train_target[0])

@@ -5,7 +5,7 @@ from skimage import io
 from skimage.transform import resize
 
 def target(score):
-	scores = numpy.arange(0.1, 1.01, 0.3)
+	scores = numpy.arange(0.2, 1.01, 0.2)
 	t = numpy.zeros(len(scores))
 
 	for i in range(len(scores)):
@@ -17,7 +17,10 @@ def target(score):
 
 def simplify(img, pixel_density=255):
 	for i in range(len(img)):
-		img[i] = int(pixel_density * img[i]) / (pixel_density * 1.0)
+		if pixel_density <= 2:
+			img[i] = 0.0 if img[i] < 0.5 else 1.0
+		else:
+			img[i] = int(pixel_density * img[i]) / (pixel_density * 1.0)
 
 	return img
 
@@ -51,7 +54,7 @@ def gen(perc, max_images):
 		img = io.imread(get_path(aux), as_grey=True)
 		img = resize(img, (64,64))
 		img = img.ravel()
-		img = simplify(img, pixel_density=8)
+		img = simplify(img, pixel_density=2)
 
 		data.append(img)
 
