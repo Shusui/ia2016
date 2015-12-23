@@ -17,10 +17,11 @@ def target(score):
 
 def simplify(img, pixel_density=255):
 	for i in range(len(img)):
-		if pixel_density <= 2:
-			img[i] = 0.0 if img[i] < 0.5 else 1.0
-		else:
-			img[i] = int(pixel_density * img[i]) / (pixel_density * 1.0)
+		for j in range(len(img[0])):
+			if pixel_density <= 2:
+				img[i][j] = 0.0 if img[i][j] < 0.5 else 1.0
+			else:
+				img[i][j] = int(pixel_density * img[i][j]) / (pixel_density * 1.0)
 
 	return img
 
@@ -32,7 +33,7 @@ def get_memorability(img_line):
 	else:
 		return float(img_line[3]) / (float(img_line[3]) + float(img_line[4]))
 
-def gen(perc, max_images):
+def gen(perc, max_images, dimension=2):
 
 	data = []
 	helper = []
@@ -53,8 +54,10 @@ def gen(perc, max_images):
 
 		img = io.imread(get_path(aux), as_grey=True)
 		img = resize(img, (64,64))
-		img = img.ravel()
 		img = simplify(img, pixel_density=2)
+
+		if dimension == 2:
+			img = img.ravel()
 
 		data.append(img)
 
@@ -69,4 +72,6 @@ def gen(perc, max_images):
 		test_data.append(data[helper[i][0]])
 		test_target.append(target(helper[i][1]))
 
-	return [train_data, train_target, test_data, test_target, helper]
+	print 'Data generated successfully.'
+	return [numpy.array(train_data), numpy.array(train_target),
+			numpy.array(test_data),  numpy.array(test_target), helper]
