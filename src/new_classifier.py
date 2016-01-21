@@ -1,7 +1,7 @@
 from __future__ import print_function
 from gendata import *
 
-import numpy, sys
+import numpy, sys, math
 
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
@@ -12,7 +12,7 @@ from keras.utils import np_utils
 def ConvolutionalNeuralNetwork(perc, max_images):
 	train_data, train_target, test_data, test_target, helper = gen(perc, max_images, 3)
 
-	epoch  = 10
+	epoch  = 3
 	batch  = 128
 	layers = 128
 
@@ -52,11 +52,11 @@ def ConvolutionalNeuralNetwork(perc, max_images):
 	score = model.evaluate(test_data, test_target,
 		show_accuracy=True, verbose=1)
 
-	print('Test score:', score[0])
-	print('Test accuracy:', score[1])
+	print('Validation score:', score[0])
+	print('Validation accuracy:', score[1])
 
 	out = model.predict(test_data, verbose=0)
-	perft(out, test_target, helper)
+	perft(out, test_target, helper, score[1])
 
 def MultiLayerPerceptron(perc, max_images):
 	train_data, train_target, test_data, test_target, helper = gen(perc, max_images, 2)
@@ -87,19 +87,30 @@ def MultiLayerPerceptron(perc, max_images):
 	score = model.evaluate(test_data, test_target,
 			show_accuracy=True, verbose=1)
 
-	print('Test score:', score[0])
-	print('Test accuracy:', score[1])
+	print('Validation score:', score[0])
+	print('Validation accuracy:', score[1])
 
 	out = model.predict(test_data, verbose=0)
-	perft(out, test_target, helper)
+	perft(out, test_target, helper, score[1])
 
-def perft(out, target, helper):
+def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
+    return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
+
+def perft(out, target, helper, test_acc, real_acc=0.0):
 	print(os.linesep + 'Detailed prediction:')
 
 	for i in range(len(out)):
-		print('Expected: ' + str(numpy.argmax(target[i])) + ' ' +
-			'- Predicted: '+ str(numpy.argmax(out[i])) + ' ' +
+		expected  = numpy.argmax(target[i])
+		predicted = numpy.argmax(out[i])
+
+		print('Expected: ' + str(expected) + ' ' +
+			'- Predicted: '+ str(predicted) + ' ' +
 			'- Image: '    + str(helper[i][2]))
+
+		if expected == predicted:
+			real_acc += 1
+
+	assert(isclose(float(acc) / len(out), test_acc))
 
 def classify(perc, max_images):
 	numpy.random.seed(1337)
