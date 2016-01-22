@@ -12,9 +12,10 @@ from keras.utils import np_utils
 def ConvolutionalNeuralNetwork(perc, max_images):
 	train_data, train_target, test_data, test_target, helper = gen(perc, max_images, 3)
 
-	epoch  = 3
-	batch  = 128
-	layers = 128
+	epoch  = 2
+	batch  = 32
+	# hidden units
+	layers = 256
 
 	n_out  = train_target.shape[1]
 	img_rows = train_data.shape[1]
@@ -23,7 +24,7 @@ def ConvolutionalNeuralNetwork(perc, max_images):
 	train_data = train_data.reshape(train_data.shape[0], 1, img_rows, img_cols)
 	test_data  = test_data.reshape(test_data.shape[0], 1, img_rows, img_cols)
 
-	filt = 8
+	filt = 16
 	conv = 3
 	pool = 2
 
@@ -35,6 +36,15 @@ def ConvolutionalNeuralNetwork(perc, max_images):
 	model.add(Activation('relu'))
 	model.add(MaxPooling2D(pool_size=(pool, pool)))
 	model.add(Dropout(0.25))
+
+	'''
+	model.add(Convolution2D(2*filt, conv, conv, border_mode='valid'))
+	model.add(Activation('relu'))
+	model.add(Convolution2D(2*filt, conv, conv))
+	model.add(Activation('relu'))
+	model.add(MaxPooling2D(pool_size=(pool, pool)))
+	model.add(Dropout(0.25))
+	'''
 
 	model.add(Flatten())
 	model.add(Dense(layers))
@@ -61,8 +71,9 @@ def ConvolutionalNeuralNetwork(perc, max_images):
 def MultiLayerPerceptron(perc, max_images):
 	train_data, train_target, test_data, test_target, helper = gen(perc, max_images, 2)
 
-	epoch  = 100
-	batch  = 128
+	epoch  = 10
+	batch  = 32
+	# hidden units
 	layers = 256
 
 	n_ins  = len(train_data[0])
