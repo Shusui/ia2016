@@ -10,10 +10,10 @@ from keras.optimizers import SGD, Adam, RMSprop
 from keras.utils import np_utils
 
 def ConvolutionalNeuralNetwork(perc, max_images):
-	train_data, train_target, test_data, test_target, helper = gen(perc, max_images, 3)
+	train_data, train_target, test_data, test_target, helper, ind = gen(perc, max_images, 3)
 
-	epoch  = 2
-	batch  = 32
+	epoch  = 10
+	batch  = 128
 	# hidden units
 	layers = 256
 
@@ -66,13 +66,13 @@ def ConvolutionalNeuralNetwork(perc, max_images):
 	print('Validation accuracy:', score[1])
 
 	out = model.predict(test_data, verbose=0)
-	perft(out, test_target, helper, score[1])
+	perft(out, test_target, helper, score[1], ind)
 
 def MultiLayerPerceptron(perc, max_images):
-	train_data, train_target, test_data, test_target, helper = gen(perc, max_images, 2)
+	train_data, train_target, test_data, test_target, helper, ind = gen(perc, max_images, 2)
 
-	epoch  = 10
-	batch  = 32
+	epoch  = 100
+	batch  = 128
 	# hidden units
 	layers = 256
 
@@ -102,12 +102,12 @@ def MultiLayerPerceptron(perc, max_images):
 	print('Validation accuracy:', score[1])
 
 	out = model.predict(test_data, verbose=0)
-	perft(out, test_target, helper, score[1])
+	perft(out, test_target, helper, score[1], ind)
 
 def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
     return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
-def perft(out, target, helper, test_acc, real_acc=0.0):
+def perft(out, target, helper, test_acc, ind, real_acc=0.0):
 	print(os.linesep + 'Detailed prediction:')
 
 	for i in range(len(out)):
@@ -116,7 +116,7 @@ def perft(out, target, helper, test_acc, real_acc=0.0):
 
 		print('Expected: ' + str(expected) + ' ' +
 			'- Predicted: '+ str(predicted) + ' ' +
-			'- Image: '    + str(helper[i][2]))
+			'- Image: '    + str(helper[ind+i][2]))
 
 		if expected == predicted:
 			real_acc += 1
