@@ -12,7 +12,7 @@ from keras.utils import np_utils
 def ConvolutionalNeuralNetwork(perc, max_images):
 	train_data, train_target, test_data, test_target, helper, ind = gen(perc, max_images, 3)
 
-	epoch  = 10
+	epoch  = 100
 	batch  = 128
 	# hidden units
 	layers = 256

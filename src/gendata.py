@@ -5,7 +5,7 @@ from skimage import io
 from skimage.transform import resize
 
 def target(score):
-	scores = numpy.arange(0.2, 1.01, 0.2)
+	scores = numpy.arange(0.5, 1.01, 0.125)
 	t = numpy.zeros(len(scores))
 
 	for i in range(len(scores)):
@@ -14,7 +14,7 @@ def target(score):
 			return t
 
 def mem_pos(score):
-	scores = numpy.arange(0.2, 1.01, 0.2)
+	scores = numpy.arange(0.5, 1.01, 0.125)
 
 	for i in range(len(scores)):
 		if score <= scores[i]:
@@ -68,10 +68,10 @@ def gen(perc, max_images, dimension=2):
 		helper.append([int(aux[0])-1, mem, get_path(aux)])
 
 		img = io.imread(get_path(aux), as_grey=True)
-		img = resize(img, (128,128))
+		img = resize(img, (256,256))
 
 		# reduce pixel density to simplify processing
-		img = simplify(img, pixel_density=2)
+		# img = simplify(img, pixel_density=2)
 
 		if dimension == 2:
 			img = img.ravel()
