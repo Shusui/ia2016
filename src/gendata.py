@@ -20,13 +20,13 @@ def mem_pos(score):
 		if score <= scores[i]:
 			return i
 
-def simplify(img, pixel_density=255):
+def simplify(img, pixel_depth=255):
 	for i in range(len(img)):
 		for j in range(len(img[0])):
-			if pixel_density <= 2:
+			if pixel_depth <= 2:
 				img[i][j] = 0.0 if img[i][j] < 0.5 else 1.0
 			else:
-				img[i][j] = int(pixel_density * img[i][j]) / (pixel_density * 1.0)
+				img[i][j] = int(pixel_depth * img[i][j]) / (pixel_depth * 1.0)
 
 	return img
 
@@ -70,8 +70,8 @@ def gen(perc, max_images, dimension=2):
 		img = io.imread(get_path(aux), as_grey=True)
 		img = resize(img, (256,256))
 
-		# reduce pixel density to simplify processing
-		# img = simplify(img, pixel_density=2)
+		# reduce pixel depth to simplify processing
+		# img = simplify(img, pixel_density=8)
 
 		if dimension == 2:
 			img = img.ravel()
